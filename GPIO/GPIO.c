@@ -61,4 +61,11 @@ int init_module(void){
 	return 0;
 }
 
+int cleanup_module(void){
+	gpio_set_value(LED, 0);
+	gpio_free(LED);
+	
+	free_irq(button_irq, DEV_NAME);
+	gpio_free(BUTTON);
 
+}
