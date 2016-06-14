@@ -61,7 +61,7 @@ int init_module(void){
 	return 0;
 }
 
-int cleanup_module(void){
+void cleanup_module(void){
 	gpio_set_value(LED, 0);
 	gpio_free(LED);
 	

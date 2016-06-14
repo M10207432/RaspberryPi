@@ -1,4 +1,4 @@
-obj-m += Hello.o
+obj-m += GPIO.o
 
 KERNEL=/lib/modules/$(shell uname -r)/build
 KERNEL2=/lib/modules/4.1.19+/build
