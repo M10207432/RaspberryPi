@@ -16,6 +16,26 @@ static unsigned long flags = 0;
 static int led_trigger = 0;
 
 
+
+/*=================================
+==================================*/
+struct GPIO_REG{
+	uint32_t GPFSEL[6];
+	uint32_t Reserved1;
+	uint32_t GPSET[2];
+	uint32_t Reserved2;
+	uint32_t GPCLR[2];
+	uint32_t Reserved3;
+	uint32)t GPLEV[2];
+};
+
+GPIO_REG *rGPIO_REG;
+
+static void GPIO_SET(int gpio, int status){
+		
+}
+
+
 /*====================================
 	Interrupt service routine
 	
