@@ -4,8 +4,8 @@
 #include <linux/gpio.h>
 #include <linux/interrupt.h>
 
-#define LED 27
-#define BUTTON 23
+#define LED 5
+#define BUTTON 24
 #define GPIO_INT_VECTOR "BTN INT"
 #define DEV_NAME "Device"
 
@@ -25,6 +25,7 @@ static int led_trigger = 0;
 static irqreturn_t BTN_ISR(int irq, void *data){
 	local_irq_save(flags);			//save cpu flags ,and then disable cpu interrupt
 	printk("BTN ISR !!!\n");	
+	gpio_set_value(LED,led_trigger);
 	led_trigger =led_trigger ? (0):(1);
 	local_irq_restore(flags);		//restore cpu flags and enable cpu interrupt
 
@@ -54,7 +55,7 @@ int init_module(void){
 	if((button_irq=gpio_to_irq(BUTTON)) < 0){
 		return -1;
 	}
-	if(request_irq(button_irq, BTN_ISR, IRQF_TRIGGER_RISING, GPIO_INT_VECTOR, DEV_NAME)){
+	if(request_irq(button_irq, BTN_ISR, IRQF_TRIGGER_RISING | IRQF_TRIGGER_FALLING, GPIO_INT_VECTOR, DEV_NAME)){
 		return -1;
 	}
 	
