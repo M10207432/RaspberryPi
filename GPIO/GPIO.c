@@ -18,21 +18,31 @@ static int led_trigger = 0;
 
 
 /*=================================
+		GPIO address order
 ==================================*/
 struct GPIO_REG{
-	uint32_t GPFSEL[6];
+	uint32_t GPFSEL[6];	//Set function=> 32bit {Reserve:Pin9:Pin8...Pin0} (Each Pin with 3 bits) 000->input 001->output
 	uint32_t Reserved1;
-	uint32_t GPSET[2];
+	uint32_t GPSET[2];	//Pin n as bit id
 	uint32_t Reserved2;
-	uint32_t GPCLR[2];
+	uint32_t GPCLR[2];	//Pin n as bit id
 	uint32_t Reserved3;
-	uint32)t GPLEV[2];
+	uint32)t GPLEV[2];	//Get the Pin status
 };
 
-GPIO_REG *rGPIO_REG;
+GPIO_REG *reg_gpio;
 
 static void GPIO_SET(int gpio, int status){
-		
+	reg_gpio->GPFSEL[gpio/10]= (reg_gpio->GPFSEL[gpio/10] & ~(7<< ((gpio % 10)*3))) | 
+								((status << ((gpio % 10)*3)));
+}
+
+static void GPIO_SET_VALUE(int gpio, bool value){
+	if(value){
+		reg_gpio->GPSET[gpio/32]=(1<<(gpio%32));
+	}else{
+		reg_gpio->GPCLR[gpio/32]=(1<<(gpio%32));
+	}
 }
 
 
