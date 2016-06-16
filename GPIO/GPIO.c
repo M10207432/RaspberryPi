@@ -13,7 +13,7 @@ MODULE_LICENSE("GPL");
 
 static short int button_irq = 0;
 static unsigned long flags = 0;
-static int led_trigger = 0;
+static bool led_trigger = 0;
 
 
 
@@ -55,7 +55,8 @@ static void GPIO_SET_VALUE(int gpio, bool value){
 static irqreturn_t BTN_ISR(int irq, void *data){
 	local_irq_save(flags);			//save cpu flags ,and then disable cpu interrupt
 	printk("BTN ISR !!!\n");	
-	gpio_set_value(LED,led_trigger);
+	//gpio_set_value(LED,led_trigger);
+	GPIO_SET_VALUE(LED,led_trigger);
 	led_trigger =led_trigger ? (0):(1);
 	local_irq_restore(flags);		//restore cpu flags and enable cpu interrupt
 
@@ -66,6 +67,7 @@ int init_module(void){
 	printk("Module Button Interrupt\n");
 
 	//---------------------------------LED set as output
+	/*
 	if(gpio_is_valid(LED) < 0){
 		return -1;	
 	}
@@ -73,7 +75,9 @@ int init_module(void){
 		return -1;
 	}
 	gpio_direction_output(LED, 0);
-
+	*/
+	reg_gpio=(struct GPIO_REG*) __io_address(0x20200000);
+	GPIO_SET(LED,0b001); //set as output
 
 	//-----------------------------BTN set as input and interrupt
 	if(gpio_request(BUTTON, "BUTTON") < 0){
