@@ -1,8 +1,10 @@
+#include <asm/io.h>
 #include <linux/module.h>
 #include <linux/init.h>
 #include <linux/kernel.h>
 #include <linux/gpio.h>
 #include <linux/interrupt.h>
+#include <mach/platform.h>
 
 #define LED 5
 #define BUTTON 24
@@ -27,17 +29,17 @@ struct GPIO_REG{
 	uint32_t Reserved2;
 	uint32_t GPCLR[2];	//Pin n as bit id
 	uint32_t Reserved3;
-	uint32)t GPLEV[2];	//Get the Pin status
-};
+	uint32_t GPLEV[2];	//Get the Pin status
+}*reg_gpio;
 
-GPIO_REG *reg_gpio;
+//GPIO_REG *reg_gpio;
 
 static void GPIO_SET(int gpio, int status){
 	reg_gpio->GPFSEL[gpio/10]= (reg_gpio->GPFSEL[gpio/10] & ~(7<< ((gpio % 10)*3))) | 
 								((status << ((gpio % 10)*3)));
 }
 
-static void GPIO_SET_VALUE(int gpio, bool value){
+static void GPIO_VALUE(int gpio, bool value){
 	if(value){
 		reg_gpio->GPSET[gpio/32]=(1<<(gpio%32));
 	}else{
@@ -56,7 +58,7 @@ static irqreturn_t BTN_ISR(int irq, void *data){
 	local_irq_save(flags);			//save cpu flags ,and then disable cpu interrupt
 	printk("BTN ISR !!!\n");	
 	//gpio_set_value(LED,led_trigger);
-	GPIO_SET_VALUE(LED,led_trigger);
+	GPIO_VALUE(LED,led_trigger);
 	led_trigger =led_trigger ? (0):(1);
 	local_irq_restore(flags);		//restore cpu flags and enable cpu interrupt
 
