@@ -35,7 +35,7 @@ struct GPIO_REG{
 //GPIO_REG *reg_gpio;
 
 static void GPIO_SET(int gpio, int status){
-	reg_gpio->GPFSEL[gpio/10]= (reg_gpio->GPFSEL[gpio/10] & ~(7<< ((gpio % 10)*3))) | 
+	//reg_gpio->GPFSEL[gpio/10]= (reg_gpio->GPFSEL[gpio/10] & ~(7<< ((gpio % 10)*3))) | 
 								((status << ((gpio % 10)*3)));
 }
 
