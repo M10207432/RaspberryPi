@@ -17,8 +17,6 @@ static short int button_irq = 0;
 static unsigned long flags = 0;
 static bool led_trigger = 0;
 
-
-
 /*=================================
 		GPIO address order
 ==================================*/
@@ -35,8 +33,11 @@ struct GPIO_REG{
 //GPIO_REG *reg_gpio;
 
 static void GPIO_SET(int gpio, int status){
-	//reg_gpio->GPFSEL[gpio/10]= (reg_gpio->GPFSEL[gpio/10] & ~(7<< ((gpio % 10)*3))) | 
-								((status << ((gpio % 10)*3)));
+	//reg_gpio->GPFSEL[gpio/10]= (reg_gpio->GPFSEL[gpio/10] & ~(7<< ((gpio % 10)*3))) | ((status << ((gpio % 10)*3)));
+	printk("value 0 = %x\n",(reg_gpio->GPFSEL[0]));
+	printk("Address 0 = %x\n",&(reg_gpio->GPFSEL[0]));
+	printk("Address 1 = %x\n",&(reg_gpio->GPFSEL[1]));
+	printk("Address 2 = %x\n",&(reg_gpio->GPFSEL[2]));
 }
 
 static void GPIO_VALUE(int gpio, bool value){
