@@ -49,4 +49,4 @@ module_exit(hello_exit);
 MODULE_LICENSE("GPL");
 MODULE_AUTHOR("TheShellWave");
 MODULE_DESCRIPTION("Raspberry Driver");
-MODULE_VERSION("0.1")
+MODULE_VERSION("0.1");
