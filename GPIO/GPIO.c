@@ -28,16 +28,12 @@ struct GPIO_REG{
 	uint32_t GPCLR[2];	//Pin n as bit id
 	uint32_t Reserved3;
 	uint32_t GPLEV[2];	//Get the Pin status
-}*reg_gpio;
+};
 
-//GPIO_REG *reg_gpio;
+struct GPIO_REG *reg_gpio;
 
 static void GPIO_SET(int gpio, int status){
-	//reg_gpio->GPFSEL[gpio/10]= (reg_gpio->GPFSEL[gpio/10] & ~(7<< ((gpio % 10)*3))) | ((status << ((gpio % 10)*3)));
-	printk("value 0 = %x\n",(reg_gpio->GPFSEL[0]));
-	printk("Address 0 = %x\n",&(reg_gpio->GPFSEL[0]));
-	printk("Address 1 = %x\n",&(reg_gpio->GPFSEL[1]));
-	printk("Address 2 = %x\n",&(reg_gpio->GPFSEL[2]));
+	reg_gpio->GPFSEL[gpio/10]= (reg_gpio->GPFSEL[gpio/10] & ~(7<< ((gpio % 10)*3))) | ((status << ((gpio % 10)*3)));	
 }
 
 static void GPIO_VALUE(int gpio, bool value){
@@ -70,17 +66,9 @@ int init_module(void){
 	printk("Module Button Interrupt\n");
 
 	//---------------------------------LED set as output
-	/*
-	if(gpio_is_valid(LED) < 0){
-		return -1;	
-	}
-	if(gpio_request(LED, "LED") < 0){
-		return -1;
-	}
-	gpio_direction_output(LED, 0);
-	*/
-	reg_gpio=(struct GPIO_REG*) __io_address(0x20200000);
-	GPIO_SET(LED,0b001); //set as output
+	reg_gpio=(struct GPIO_REG*) __io_address(GPIO_BASE);
+	printk("reg_gpio=%x\n",GPIO_BASE);
+	GPIO_SET(LED,1); //set as output
 
 	//-----------------------------BTN set as input and interrupt
 	if(gpio_request(BUTTON, "BUTTON") < 0){
@@ -100,10 +88,8 @@ int init_module(void){
 }
 
 void cleanup_module(void){
-	gpio_set_value(LED, 0);
-	gpio_free(LED);
-	
+	GPIO_SET(LED,0);
+
 	free_irq(button_irq, DEV_NAME);
 	gpio_free(BUTTON);
-
 }
