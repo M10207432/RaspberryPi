@@ -32,6 +32,10 @@ struct GPIO_REG{
 
 struct GPIO_REG *reg_gpio;
 
+/*=================================
+	Reg Setting (Input/Output)
+		    (Set Value)
+==================================*/
 static void GPIO_SET(int gpio, int status){
 	reg_gpio->GPFSEL[gpio/10]= (reg_gpio->GPFSEL[gpio/10] & ~(7<< ((gpio % 10)*3))) | ((status << ((gpio % 10)*3)));	
 }
@@ -43,6 +47,10 @@ static void GPIO_VALUE(int gpio, bool value){
 		reg_gpio->GPCLR[gpio/32]=(1<<(gpio%32));
 	}
 }
+
+/*==============================
+	UART Function
+===============================*/
 
 
 /*====================================
